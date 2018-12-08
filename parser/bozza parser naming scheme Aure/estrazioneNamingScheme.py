@@ -4,8 +4,10 @@ import os
 import sys
 #modifica del path per windows
 path = sys.argv[1].replace("\\","/")
+#nome dell'apk analizzato per usarlo come nome del file di output
+nome_apk = sys.argv[1].replace("\\","_")
 #apertura file su cui scrivere i risultati
-out_file = open("test.txt","w+")
+out_file = open(nome_apk+".txt","w+")
 #Il metodo walk () genera i nomi dei file in un
 #albero delle directory navigando l'albero dal basso verso 
 #l'alto. L'indice serve solo a contare il numero delle classi .java presenti nella directory
