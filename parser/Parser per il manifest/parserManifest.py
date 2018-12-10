@@ -27,6 +27,18 @@ def getPermessi(root):
         permessi.append(attribute["{http://schemas.android.com/apk/res/android}name"])
     return permessi
 
+#dato un root restituisce una lista dei nomi delle activity ...... il che rende la funzione quasi uguale a "getPermessi" per ora
+def getActivity(root):
+    activity = [] #la lista con gli activity che verrà poi restituita
+    # https://stackoverflow.com/questions/14853243/parsing-xml-with-namespace-in-python-via-elementtree
+    # con elementtree si ha un problema col namespace, xmlns:android e va messo per esteso
+
+    applicatazione = root.find("application") # ottengo il figlio application dal manifest, dovrebbe essere solo uno, quindi non serve un for
+    for member in applicatazione.findall("activity"): #dal figlio application prendo il figlio activity
+        attribute = member.attrib
+        activity.append(attribute["{http://schemas.android.com/apk/res/android}name"])
+    return activity
+
 
 # restituisce il complemento dell'intersezione tra due liste (controllare complessità del codice)
 def diffList(li1, li2):
@@ -63,7 +75,13 @@ permessi2 = getPermessi(root2)
 ##print(*permessi2, sep = "\n")
 differenzaPermessi = diffList(permessi2, permessi)
 #print(diffList(permessi2, permessi))
-duplicati2 =  cercaDuplicati(permessi2)
-#print( cercaDuplicati(permessi2) )
-scriviListaSuFile(r"C:\Users\Francesco\Desktop\prova.txt", duplicati2)
+att1 = getActivity(root)
+#print(*att1, sep = "\n")
+att2 = getActivity(root2)
+differenzaActivity = diffList(att2, att1)
+#print(*differenzaActivity, sep = "\n")
+
+print(*cercaDuplicati(att2), sep = "\n")
+
+
 # -------------------------------------------------------------------------------------------------------#
