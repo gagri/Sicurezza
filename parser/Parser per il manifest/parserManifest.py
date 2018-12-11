@@ -3,10 +3,17 @@
 
 
 import xml.etree.cElementTree as ET
-import csv
-import sys
-import os
-import os.path
+
+
+#classe in cui ci sarà il nome dell'elemento (che sia un'aacitivy, una service o un receiver)
+# e tre array che conterranno tutte le ACTION,CATEGORY,DATA del nodo intentFilter
+class ElementoManifest:
+
+    def __init__(self): # se le dichiarazioni non vengono messe qua, phyton le considera come attributi di classi comuni a tutte le variabili di quella classe
+        self.name = ""
+        self.action = []
+        self.category = []
+        self.data = []
 
 
 #funzione che dato un file xml restituisce il root
@@ -28,7 +35,7 @@ def getPermessi(root):
     return permessi
 
 #dato un root restituisce una lista dei nomi delle activity ...... il che rende la funzione quasi uguale a "getPermessi" per ora
-def getActivity(root):
+def getNomeActivity(root):
     activity = [] #la lista con gli activity che verrà poi restituita
     # https://stackoverflow.com/questions/14853243/parsing-xml-with-namespace-in-python-via-elementtree
     # con elementtree si ha un problema col namespace, xmlns:android e va messo per esteso
@@ -38,6 +45,22 @@ def getActivity(root):
         attribute = member.attrib
         activity.append(attribute["{http://schemas.android.com/apk/res/android}name"])
     return activity
+
+
+#funzione che restituisce una lista di ElementoManifest contenente tutte le activity con i corrispettivi intent
+def getActivity(root):
+    elementi = [] # la lista di ElementoManifest che verrà restituita
+    for applicazione in root.findall("application"): # le activity sono sotto la voce application; dovrebbe essercene solo una, ma nel dubbio metto un find all
+        for member in applicazione.findall("activity"):
+            em = ElementoManifest()
+            attribute = member.attrib
+            em.name = attribute["{http://schemas.android.com/apk/res/android}name"] #salvo il nome dell'activity
+            for intent in member.findall("intent-filter"): #cerco se l'activity ha un figlio "intent", non sempre lo ha
+                for action in intent.findall("action"): # cerco tutte le azioni dell'intent
+                    em.action.append(action.attrib["{http://schemas.android.com/apk/res/android}name"])
+            #print (em.name)
+            elementi.append(em) #aggiungo il nuovo elemento creato alla lista
+    return elementi
 
 
 # restituisce il complemento dell'intersezione tra due liste (controllare complessità del codice)
@@ -75,13 +98,20 @@ permessi2 = getPermessi(root2)
 ##print(*permessi2, sep = "\n")
 differenzaPermessi = diffList(permessi2, permessi)
 #print(diffList(permessi2, permessi))
-att1 = getActivity(root)
+att1 = getNomeActivity(root)
 #print(*att1, sep = "\n")
-att2 = getActivity(root2)
+att2 = getNomeActivity(root2)
 differenzaActivity = diffList(att2, att1)
 #print(*differenzaActivity, sep = "\n")
 
-print(*cercaDuplicati(att2), sep = "\n")
+#print(*cercaDuplicati(att2), sep = "\n")
 
+e = getActivity(root2)
+
+for i in e:
+    print(i.name)
+    print ("intents:")
+    print(i.action)
+    print()
 
 # -------------------------------------------------------------------------------------------------------#
