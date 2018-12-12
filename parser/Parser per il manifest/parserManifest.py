@@ -15,6 +15,11 @@ class ElementoManifest:
         self.category = []
         self.data = []
 
+    def printElemento(self):
+        print(self.name)
+        print(self.action)
+        print(self.category)
+        print()
 
 #funzione che dato un file xml restituisce il root
 #il percorso va scritto  con una r prima (esempio r"c:\utenti") or con due backslash (""c:\\utenti") or con uno slash("c:/utenti")
@@ -35,7 +40,7 @@ def getPermessi(root):
     return permessi
 
 #dato un root restituisce una lista dei nomi delle activity ...... il che rende la funzione quasi uguale a "getPermessi" per ora
-def getNomeActivity(root):
+def getNomiActivity(root):
     activity = [] #la lista con gli activity che verrà poi restituita
     # https://stackoverflow.com/questions/14853243/parsing-xml-with-namespace-in-python-via-elementtree
     # con elementtree si ha un problema col namespace, xmlns:android e va messo per esteso
@@ -58,6 +63,8 @@ def getActivity(root):
             for intent in member.findall("intent-filter"): #cerco se l'activity ha un figlio "intent", non sempre lo ha
                 for action in intent.findall("action"): # cerco tutte le azioni dell'intent
                     em.action.append(action.attrib["{http://schemas.android.com/apk/res/android}name"])
+                for category in intent.findall("category"): # cerco tutte le category dell'intent in modo da inserirle
+                    em.category.append(category.attrib["{http://schemas.android.com/apk/res/android}name"])
             #print (em.name)
             elementi.append(em) #aggiungo il nuovo elemento creato alla lista
     return elementi
@@ -80,6 +87,7 @@ def cercaDuplicati(lista):
             duplicati.append(x)
     return(duplicati)
 
+
 #dato un percorso e un nome file scrive la lista passata su quel file (in modalità w)
 def scriviListaSuFile(file, lista):
     file = open(file, "w")
@@ -98,9 +106,9 @@ permessi2 = getPermessi(root2)
 ##print(*permessi2, sep = "\n")
 differenzaPermessi = diffList(permessi2, permessi)
 #print(diffList(permessi2, permessi))
-att1 = getNomeActivity(root)
+att1 = getNomiActivity(root)
 #print(*att1, sep = "\n")
-att2 = getNomeActivity(root2)
+att2 = getNomiActivity(root2)
 differenzaActivity = diffList(att2, att1)
 #print(*differenzaActivity, sep = "\n")
 
@@ -109,9 +117,6 @@ differenzaActivity = diffList(att2, att1)
 e = getActivity(root2)
 
 for i in e:
-    print(i.name)
-    print ("intents:")
-    print(i.action)
-    print()
+    i.printElemento()
 
 # -------------------------------------------------------------------------------------------------------#
