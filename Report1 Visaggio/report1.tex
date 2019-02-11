@@ -4,25 +4,21 @@
 \begin{enumerate}
 	\item Permessi
 	\begin{itemize}
-		\item permessi non presenti nell'App originale
-		\item permessi duplicati
+		\item numero di permessi aggiunti
+		\item lista dei permessi aggiunti
 	\end{itemize}
 	\item File
 	\begin{itemize}
-		\item aggiunta di file nuovi (contenente il rider)
-		\item renaming (per superare controlli similarità)
+		\item numero di file aggiunti
+		\item lista di file aggiunti
 	\end{itemize}
 \item Aggiunta Activity
 \begin{itemize}
-	\item aggiunta Activity rispetto all'App originale (spesso Broadcast Receiver)
-	\item più Activity con lo stesso scopo
-	\item naming convention non rispettata nelle nuove Activity
-	\item spesso l'hook è aggiunto nell'Activity principale
-	\item chiamata a servizio
+	\item numero activity aggiunti
+	\item lista di acrtivity aggiunti
 \end{itemize}
-\item Caricamento dinamico (DexClassLoader)
-\item Dimensione maggiore (numero LOC o meglio numero di statements LSLOC)
-\item Valore entropia (payload cifrati)
+\item Delta della differenza dei record ricavati dal caricamento dinamico (risultato app ripacchettizzata - risultato app originale)
+\item analisi delle dipendenze con jdeps
 \end{enumerate}
 
 \section*{Modalità attivazione rider}
